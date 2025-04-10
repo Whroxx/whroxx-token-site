@@ -16,13 +16,14 @@
       padding: 40px 20px;
     }
     .container {
-      max-width: 800px;
+      max-width: 900px;
       width: 100%;
       background: #161616;
       border-radius: 20px;
       padding: 30px;
       box-shadow: 0 0 30px rgba(0, 234, 255, 0.15);
       text-align: center;
+      margin-bottom: 30px;
     }
     h1 {
       font-size: 3rem;
@@ -36,7 +37,7 @@
     }
     .info-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
       gap: 20px;
       margin-bottom: 30px;
     }
@@ -77,6 +78,22 @@
       font-size: 0.9rem;
       color: #777;
     }
+    .transactions {
+      width: 100%;
+      margin-top: 30px;
+      padding: 20px;
+      background-color: #222;
+      border-radius: 15px;
+    }
+    .transaction {
+      display: flex;
+      justify-content: space-between;
+      padding: 10px;
+      border-bottom: 1px solid #444;
+    }
+    .transaction:last-child {
+      border-bottom: none;
+    }
   </style>
 </head>
 <body>
@@ -105,9 +122,23 @@
       Comprar WHX
     </a>
   </div>
+  
+  <div class="container transactions">
+    <h2>Transações Recentes</h2>
+    <div id="transactionList">
+      <div class="transaction">
+        <span>Transação 1</span><span>Preço: $0.00000064</span>
+      </div>
+      <div class="transaction">
+        <span>Transação 2</span><span>Preço: $0.00000062</span>
+      </div>
+    </div>
+  </div>
+
   <div class="footer">
     © 2025 Whroxx Token
   </div>
+
   <script>
     async function fetchTokenInfo() {
       try {
@@ -129,14 +160,36 @@
         const holdersData = await holdersResponse.json();
 
         const totalHolders = holdersData?.result?.length ? "1+" : "0";
-
         document.getElementById("holders").innerText = totalHolders;
       } catch {
         document.getElementById("holders").innerText = "Erro";
       }
     }
 
+    async function fetchTransactions() {
+      try {
+        const response = await fetch("https://api.bscscan.com/api?module=account&action=txlist&address=0x236e6eDedc28B106f52a7e8388AC02631EcF86b1&startblock=0&endblock=99999999&page=1&offset=5&sort=desc&apikey=I655V3IGM93Z7R5JH5WEEF3DMYZ268W833");
+        const data = await response.json();
+
+        const transactions = data?.result || [];
+        const transactionList = document.getElementById("transactionList");
+
+        transactions.forEach(transaction => {
+          const transactionElement = document.createElement("div");
+          transactionElement.classList.add("transaction");
+          transactionElement.innerHTML = `
+            <span>${transaction.hash.slice(0, 8)}...</span>
+            <span>Preço: $${parseFloat(transaction.value / 1e18).toFixed(6)}</span>
+          `;
+          transactionList.appendChild(transactionElement);
+        });
+      } catch (error) {
+        console.error("Erro ao obter transações", error);
+      }
+    }
+
     fetchTokenInfo();
+    fetchTransactions();
   </script>
 </body>
 </html>
