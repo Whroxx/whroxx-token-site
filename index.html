@@ -107,16 +107,6 @@
   <script>
     async function fetchTokenInfo() {
       try {
-        // Holders via token balance list
-        const holdersRes = await axios.get("https://api.bscscan.com/api", {
-          params: {
-            module: "token",
-            action: "tokeninfo",
-            contractaddress: "0x236e6eDedc28B106f52a7e8388AC02631EcF86b1",
-            apikey: "I655V3IGM93Z7R5JH5WEEF3DMYZ268W833"
-          }
-        });
-
         const tokenRes = await axios.post("https://proxy.pancakeswap.com/bsc-gateway", {
           operationName: "pair", 
           variables: { id: "0xc301D174B8e28521ADEa36773446705B3ccFe114" },
@@ -128,7 +118,16 @@
           }`
         });
 
-        const holdersCount = holdersRes.data.result[0].holderCount;
+        const holdersRes = await axios.get("https://api.bscscan.com/api", {
+          params: {
+            module: "token",
+            action: "tokenholderlist",
+            contractaddress: "0x236e6eDedc28B106f52a7e8388AC02631EcF86b1",
+            apikey: "I655V3IGM93Z7R5JH5WEEF3DMYZ268W833"
+          }
+        });
+
+        const holdersCount = holdersRes.data.result.length;
         const price = parseFloat(tokenRes.data.data.pair.token0Price);
         const supply = 1000000000;
         const marketCap = price * supply;
