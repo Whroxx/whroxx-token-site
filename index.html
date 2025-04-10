@@ -15,10 +15,8 @@
       background: #101010;
       color: #fff;
       display: flex;
-      justify-content: center;
-      align-items: center;
-      height: 100vh;
-      margin: 0;
+      flex-direction: column;
+      min-height: 100vh;
     }
     .container {
       background: #161616;
@@ -27,6 +25,8 @@
       width: 100%;
       max-width: 1200px;
       box-shadow: 0 0 30px rgba(0, 234, 255, 0.15);
+      margin: 40px auto;
+      flex-grow: 1;
     }
     h1 {
       font-size: 3rem;
@@ -75,6 +75,7 @@
       text-decoration: none;
       font-size: 1.2rem;
       transition: all 0.3s ease;
+      margin-top: 30px;
     }
     .button:hover {
       transform: scale(1.05);
@@ -107,10 +108,15 @@
       color: #fff;
     }
     .footer {
-      margin-top: 30px;
+      background: #121212;
+      padding: 20px;
       text-align: center;
       font-size: 0.9rem;
       color: #777;
+      position: relative;
+      bottom: 0;
+      width: 100%;
+      margin-top: auto;
     }
   </style>
 </head>
@@ -155,7 +161,6 @@
   </div>
 
   <script>
-    // Função para pegar as informações do token, incluindo preço, market cap e holders
     async function fetchTokenInfo() {
       try {
         const dexResponse = await fetch("https://api.dexscreener.com/latest/dex/pairs/bsc/0xc301D174B8e28521ADEa36773446705B3ccFe114");
@@ -184,7 +189,6 @@
       }
     }
 
-    // Função para pegar transações reais
     async function fetchTransactions() {
       try {
         const response = await fetch("https://api.bscscan.com/api?module=account&action=txlist&address=0x236e6eDedc28B106f52a7e8388AC02631EcF86b1&startblock=0&endblock=99999999&page=1&offset=5&sort=desc&apikey=I655V3IGM93Z7R5JH5WEEF3DMYZ268W833");
@@ -193,7 +197,6 @@
         const transactions = data?.result || [];
         const transactionList = document.getElementById("transactionList");
         
-        // Limpa transações anteriores
         transactionList.innerHTML = '';
 
         transactions.forEach(transaction => {
@@ -210,7 +213,6 @@
       }
     }
 
-    // Chama as funções de atualização
     fetchTokenInfo();
     fetchTransactions();
     setInterval(fetchTransactions, 30000);  // Atualiza as transações a cada 30 segundos
