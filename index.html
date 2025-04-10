@@ -21,15 +21,22 @@
       text-align: center;
       padding-top: 60px;
     }
+    .hero {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      margin-bottom: 40px;
+    }
     .header {
-      font-size: 2.5rem;
+      font-size: 3rem;
       color: #00eaff;
       margin-bottom: 10px;
     }
     .subtitle {
-      font-size: 1rem;
+      font-size: 1.2rem;
       color: #cccccc;
-      margin-bottom: 30px;
+      margin-bottom: 20px;
+      max-width: 600px;
     }
     .card {
       background: rgba(0, 0, 0, 0.6);
@@ -37,22 +44,22 @@
       padding: 30px;
       border-radius: 20px;
       width: 90%;
-      max-width: 400px;
-      box-shadow: 0 0 20px #00eaff33;
+      max-width: 450px;
+      box-shadow: 0 0 25px #00eaff33;
     }
     .info {
       font-size: 1rem;
-      margin: 10px 0;
+      margin: 12px 0;
     }
     .button {
       background: #00eaff;
       color: #000;
       font-weight: bold;
-      padding: 15px 25px;
+      padding: 15px 30px;
       border: none;
       border-radius: 30px;
       cursor: pointer;
-      margin-top: 20px;
+      margin-top: 25px;
       text-decoration: none;
       display: inline-block;
       transition: background 0.3s;
@@ -61,22 +68,24 @@
       background: #00bcd4;
     }
     .footer {
-      margin-top: 40px;
-      font-size: 0.8rem;
-      color: #555;
+      margin-top: 60px;
+      font-size: 0.85rem;
+      color: #777;
     }
     .animated-glow {
       animation: glow 2s infinite alternate;
     }
     @keyframes glow {
       from { text-shadow: 0 0 10px #00eaff; }
-      to { text-shadow: 0 0 20px #00eaff, 0 0 30px #00eaff; }
+      to { text-shadow: 0 0 25px #00eaff, 0 0 40px #00eaff; }
     }
   </style>
 </head>
 <body>
-  <div class="header animated-glow">Whroxx ($WHX)</div>
-  <div class="subtitle">Uma nova era de ativos digitais inteligentes</div>
+  <section class="hero">
+    <div class="header animated-glow">Whroxx ($WHX)</div>
+    <div class="subtitle">A inteligência financeira do futuro. Simples. Digital. Transparente.</div>
+  </section>
 
   <div class="card">
     <div class="info"><strong>Supply Total:</strong><br>1,000,000,000 WHX</div>
@@ -92,7 +101,7 @@
   </div>
 
   <div class="footer">
-    © 2025 Whroxx Token - Todos os direitos reservados
+    © 2025 Whroxx Token — Construído com tecnologia, movido pela comunidade.
   </div>
 
   <script>
