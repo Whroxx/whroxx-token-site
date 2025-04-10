@@ -98,23 +98,33 @@
   <script>
     async function fetchTokenInfo() {
       try {
-        const response = await axios.get("https://api.bscscan.com/api", {
-          params: {
-            module: "token",
-            action: "tokeninfo",
-            contractaddress: "0x236e6eDedc28B106f52a7e8388AC02631EcF86b1",
-            apikey: "I655V3IGM93Z7R5JH5WEEF3DMYZ268W833"
-          }
-        });
+        const [holdersRes, pairRes] = await Promise.all([
+          axios.get("https://api.bscscan.com/api", {
+            params: {
+              module: "token",
+              action: "tokeninfo",
+              contractaddress: "0x236e6eDedc28B106f52a7e8388AC02631EcF86b1",
+              apikey: "I655V3IGM93Z7R5JH5WEEF3DMYZ268W833"
+            }
+          }),
+          axios.post("https://proxy.pancakeswap.com/bsc-gateway", {
+            operationName: "pair", 
+            variables: { id: "0xc301D174B8e28521ADEa36773446705B3ccFe114" },
+            query: `query pair($id: ID!) {
+              pair(id: $id) {
+                reserveUSD
+                token0Price
+              }
+            }`
+          })
+        ]);
 
-        const info = response.data.result[0];
-        document.getElementById("holders").innerText = info.holders || "-";
-
-        // Preço e market cap são fictícios pois não vêm dessa API
-        const price = 0.00000123; // simulado
-        const supply = 1000000000; // total supply WHX
+        const holders = holdersRes.data.result[0].holders;
+        const price = parseFloat(pairRes.data.data.pair.token0Price);
+        const supply = 1000000000;
         const marketCap = price * supply;
 
+        document.getElementById("holders").innerText = holders;
         document.getElementById("price").innerText = `$${price.toFixed(8)}`;
         document.getElementById("marketcap").innerText = `$${marketCap.toLocaleString()}`;
 
