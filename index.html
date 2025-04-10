@@ -4,47 +4,83 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Whroxx ($WHX)</title>
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@600&display=swap" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
   <style>
     body {
-      background-color: #000;
-      color: #fff;
-      font-family: Arial, sans-serif;
+      background: radial-gradient(circle at center, #101820, #000);
+      color: #ffffff;
+      font-family: 'Orbitron', sans-serif;
+      margin: 0;
+      padding: 0;
       display: flex;
       flex-direction: column;
       align-items: center;
-      justify-content: center;
-      height: 100vh;
-      margin: 0;
+      justify-content: flex-start;
+      min-height: 100vh;
       text-align: center;
+      padding-top: 60px;
+    }
+    .header {
+      font-size: 2.5rem;
+      color: #00eaff;
+      margin-bottom: 10px;
+    }
+    .subtitle {
+      font-size: 1rem;
+      color: #cccccc;
+      margin-bottom: 30px;
     }
     .card {
-      background: #111;
-      border: 1px solid #333;
-      padding: 20px;
-      border-radius: 10px;
+      background: rgba(0, 0, 0, 0.6);
+      border: 1px solid #00eaff;
+      padding: 30px;
+      border-radius: 20px;
       width: 90%;
       max-width: 400px;
+      box-shadow: 0 0 20px #00eaff33;
+    }
+    .info {
+      font-size: 1rem;
+      margin: 10px 0;
     }
     .button {
-      background: linear-gradient(to right, #00bcd4, #3f51b5);
-      color: #fff;
-      padding: 12px 20px;
+      background: #00eaff;
+      color: #000;
+      font-weight: bold;
+      padding: 15px 25px;
       border: none;
-      border-radius: 5px;
+      border-radius: 30px;
       cursor: pointer;
       margin-top: 20px;
       text-decoration: none;
       display: inline-block;
+      transition: background 0.3s;
+    }
+    .button:hover {
+      background: #00bcd4;
+    }
+    .footer {
+      margin-top: 40px;
+      font-size: 0.8rem;
+      color: #555;
+    }
+    .animated-glow {
+      animation: glow 2s infinite alternate;
+    }
+    @keyframes glow {
+      from { text-shadow: 0 0 10px #00eaff; }
+      to { text-shadow: 0 0 20px #00eaff, 0 0 30px #00eaff; }
     }
   </style>
 </head>
 <body>
-  <h1>Whroxx ($WHX)</h1>
-  <p>Uma nova era de ativos digitais inteligentes.</p>
+  <div class="header animated-glow">Whroxx ($WHX)</div>
+  <div class="subtitle">Uma nova era de ativos digitais inteligentes</div>
 
   <div class="card">
-    <p><strong>Supply Total:</strong><br>1,000,000,000 WHX</p>
-    <p><strong>Holders:</strong><br>Atualizando em breve...</p>
+    <div class="info"><strong>Supply Total:</strong><br>1,000,000,000 WHX</div>
+    <div class="info"><strong>Holders:</strong><br><span id="holders">Atualizando...</span></div>
     <a 
       class="button" 
       href="https://pancakeswap.finance/swap?outputCurrency=0x236e6eDedc28B106f52a7e8388AC02631EcF86b1&inputCurrency=BNB" 
@@ -52,5 +88,31 @@
       Compre WHX
     </a>
   </div>
+
+  <div class="footer">
+    © 2025 Whroxx Token - Todos os direitos reservados
+  </div>
+
+  <script>
+    async function fetchHolders() {
+      try {
+        const res = await axios.get("https://api.bscscan.com/api", {
+          params: {
+            module: "token",
+            action: "tokenholderlist",
+            contractaddress: "0x236e6eDedc28B106f52a7e8388AC02631EcF86b1",
+            page: 1,
+            offset: 1,
+            apikey: "YourBscScanAPIKey"
+          }
+        });
+        const holders = res.data.result ? res.data.result.length : 'Indisponível';
+        document.getElementById("holders").innerText = holders;
+      } catch (e) {
+        document.getElementById("holders").innerText = 'Erro ao carregar';
+      }
+    }
+    fetchHolders();
+  </script>
 </body>
 </html>
