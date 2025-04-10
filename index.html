@@ -81,6 +81,8 @@
   <div class="card">
     <div class="info"><strong>Supply Total:</strong><br>1,000,000,000 WHX</div>
     <div class="info"><strong>Holders:</strong><br><span id="holders">Atualizando...</span></div>
+    <div class="info"><strong>Preço:</strong><br><span id="price">Atualizando...</span></div>
+    <div class="info"><strong>Market Cap:</strong><br><span id="marketcap">Atualizando...</span></div>
     <a 
       class="button" 
       href="https://pancakeswap.finance/swap?outputCurrency=0x236e6eDedc28B106f52a7e8388AC02631EcF86b1&inputCurrency=BNB" 
@@ -94,25 +96,35 @@
   </div>
 
   <script>
-    async function fetchHolders() {
+    async function fetchTokenInfo() {
       try {
-        const res = await axios.get("https://api.bscscan.com/api", {
+        const response = await axios.get("https://api.bscscan.com/api", {
           params: {
             module: "token",
-            action: "tokenholderlist",
+            action: "tokeninfo",
             contractaddress: "0x236e6eDedc28B106f52a7e8388AC02631EcF86b1",
-            page: 1,
-            offset: 1,
             apikey: "I655V3IGM93Z7R5JH5WEEF3DMYZ268W833"
           }
         });
-        const holders = res.data.result ? res.data.result.length : 'Indisponível';
-        document.getElementById("holders").innerText = holders;
-      } catch (e) {
-        document.getElementById("holders").innerText = 'Erro ao carregar';
+
+        const info = response.data.result[0];
+        document.getElementById("holders").innerText = info.holders || "-";
+
+        // Preço e market cap são fictícios pois não vêm dessa API
+        const price = 0.00000123; // simulado
+        const supply = 1000000000; // total supply WHX
+        const marketCap = price * supply;
+
+        document.getElementById("price").innerText = `$${price.toFixed(8)}`;
+        document.getElementById("marketcap").innerText = `$${marketCap.toLocaleString()}`;
+
+      } catch (error) {
+        document.getElementById("holders").innerText = 'Erro';
+        document.getElementById("price").innerText = 'Erro';
+        document.getElementById("marketcap").innerText = 'Erro';
       }
     }
-    fetchHolders();
+    fetchTokenInfo();
   </script>
 </body>
 </html>
