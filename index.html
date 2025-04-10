@@ -4,142 +4,73 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Whroxx ($WHX)</title>
-  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@600&display=swap" rel="stylesheet">
-  <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
   <style>
     body {
-      background: radial-gradient(circle at center, #101820, #000);
+      background: #0a0a0a;
       color: #ffffff;
-      font-family: 'Orbitron', sans-serif;
+      font-family: Arial, sans-serif;
       margin: 0;
-      padding: 0;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: flex-start;
-      min-height: 100vh;
+      padding: 20px;
       text-align: center;
-      padding-top: 60px;
     }
-    .hero {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      margin-bottom: 40px;
-    }
-    .header {
-      font-size: 3rem;
+    h1 {
       color: #00eaff;
-      margin-bottom: 10px;
-    }
-    .subtitle {
-      font-size: 1.2rem;
-      color: #cccccc;
-      margin-bottom: 20px;
-      max-width: 600px;
-    }
-    .card {
-      background: rgba(0, 0, 0, 0.6);
-      border: 1px solid #00eaff;
-      padding: 30px;
-      border-radius: 20px;
-      width: 90%;
-      max-width: 450px;
-      box-shadow: 0 0 25px #00eaff33;
     }
     .info {
-      font-size: 1rem;
-      margin: 12px 0;
+      margin: 15px 0;
+      font-size: 1.1rem;
     }
     .button {
-      background: #00eaff;
+      background-color: #00eaff;
+      border: none;
+      padding: 10px 20px;
       color: #000;
       font-weight: bold;
-      padding: 15px 30px;
-      border: none;
-      border-radius: 30px;
-      cursor: pointer;
-      margin-top: 25px;
+      border-radius: 20px;
       text-decoration: none;
+      margin-top: 20px;
       display: inline-block;
-      transition: background 0.3s;
-    }
-    .button:hover {
-      background: #00bcd4;
     }
     .footer {
-      margin-top: 60px;
-      font-size: 0.85rem;
-      color: #777;
-    }
-    .animated-glow {
-      animation: glow 2s infinite alternate;
-    }
-    @keyframes glow {
-      from { text-shadow: 0 0 10px #00eaff; }
-      to { text-shadow: 0 0 25px #00eaff, 0 0 40px #00eaff; }
+      margin-top: 40px;
+      font-size: 0.8rem;
+      color: #888;
     }
   </style>
 </head>
 <body>
-  <section class="hero">
-    <div class="header animated-glow">Whroxx ($WHX)</div>
-    <div class="subtitle">A inteligência financeira do futuro. Simples. Digital. Transparente.</div>
-  </section>
-
-  <div class="card">
-    <div class="info"><strong>Supply Total:</strong><br>1,000,000,000 WHX</div>
-    <div class="info"><strong>Holders:</strong><br><span id="holders">Atualizando...</span></div>
-    <div class="info"><strong>Preço:</strong><br><span id="price">Atualizando...</span></div>
-    <div class="info"><strong>Market Cap:</strong><br><span id="marketcap">Atualizando...</span></div>
-    <a 
-      class="button" 
-      href="https://pancakeswap.finance/swap?outputCurrency=0x236e6eDedc28B106f52a7e8388AC02631EcF86b1&inputCurrency=BNB" 
-      target="_blank">
-      Compre WHX
-    </a>
-  </div>
-
+  <h1>Whroxx ($WHX)</h1>
+  <p>A inteligência financeira do futuro.</p>
+  <div class="info"><strong>Supply Total:</strong> 1,000,000,000 WHX</div>
+  <div class="info"><strong>Holders:</strong> <span id="holders">Atualizando...</span></div>
+  <div class="info"><strong>Preço:</strong> <span id="price">Atualizando...</span></div>
+  <div class="info"><strong>Market Cap:</strong> <span id="marketcap">Atualizando...</span></div>
+  <a 
+    class="button" 
+    href="https://pancakeswap.finance/swap?outputCurrency=0x236e6eDedc28B106f52a7e8388AC02631EcF86b1&inputCurrency=BNB" 
+    target="_blank">
+    Comprar WHX
+  </a>
   <div class="footer">
-    © 2025 Whroxx Token — Construído com tecnologia, movido pela comunidade.
+    © 2025 Whroxx Token
   </div>
-
   <script>
     async function fetchTokenInfo() {
       try {
-        const tokenRes = await axios.post("https://proxy.pancakeswap.com/bsc-gateway", {
-          operationName: "pair", 
-          variables: { id: "0xc301D174B8e28521ADEa36773446705B3ccFe114" },
-          query: `query pair($id: ID!) {
-            pair(id: $id) {
-              reserveUSD
-              token0Price
-            }
-          }`
-        });
+        const tokenRes = await fetch("https://api.dexscreener.com/latest/dex/pairs/bsc/0xc301D174B8e28521ADEa36773446705B3ccFe114");
+        const tokenData = await tokenRes.json();
 
-        const holdersRes = await axios.get("https://api.bscscan.com/api", {
-          params: {
-            module: "token",
-            action: "tokeninfo",
-            contractaddress: "0x236e6eDedc28B106f52a7e8388AC02631EcF86b1",
-            apikey: "I655V3IGM93Z7R5JH5WEEF3DMYZ268W833"
-          }
-        });
+        const holdersRes = await fetch("https://api.bscscan.com/api?module=token&action=tokeninfo&contractaddress=0x236e6eDedc28B106f52a7e8388AC02631EcF86b1&apikey=I655V3IGM93Z7R5JH5WEEF3DMYZ268W833");
+        const holdersData = await holdersRes.json();
 
-        const supply = 1000000000;
-        const price = parseFloat(tokenRes.data.data.pair.token0Price);
-        const marketCap = price * supply;
-
-        const holdersCount = holdersRes.data.result && holdersRes.data.result[0] && holdersRes.data.result[0].holdersCount
-          ? holdersRes.data.result[0].holdersCount
-          : 'N/A';
+        const price = parseFloat(tokenData?.pair?.priceUsd || 0);
+        const marketCap = price * 1000000000;
+        const holdersCount = holdersData?.result?.[0]?.holdersCount || 'N/A';
 
         document.getElementById("holders").innerText = holdersCount;
         document.getElementById("price").innerText = `$${price.toFixed(8)}`;
         document.getElementById("marketcap").innerText = `$${marketCap.toLocaleString()}`;
-      } catch (error) {
-        console.error(error);
+      } catch (e) {
         document.getElementById("holders").innerText = 'Erro';
         document.getElementById("price").innerText = 'Erro';
         document.getElementById("marketcap").innerText = 'Erro';
